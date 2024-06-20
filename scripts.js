@@ -99,9 +99,12 @@ function draw2(){
     //angle += clockwise ? rotationSpeed: -rotationSpeed;
     requestAnimationFrame(draw2);
 }
-requestAnimationFrame(draw);
 
-requestAnimationFrame(draw2);
+
+draw();
+draw2();
+
+
 
 
 
