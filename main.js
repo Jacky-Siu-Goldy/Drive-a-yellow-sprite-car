@@ -461,7 +461,13 @@ addEventListener("keydown", function (event){
 
 addEventListener("keyup", function(event) {
     event.preventDefault();
-    upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
+    if (event.key === "ArrowLeft"){
+    upRight = upLeft = downRight = downLeft = rightArrow = leftArrow = false;
+    } else if (event.key === "ArrowRight"){
+        upRight = upLeft = downRight = downLeft = rightArrow = rightArrow = false;
+    } else{
+        upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
+    }
     keysPressed.delete(event.key);
    
     
