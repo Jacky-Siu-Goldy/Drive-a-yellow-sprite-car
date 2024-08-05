@@ -26,6 +26,8 @@ var  upArrow = false,
      upLeft = false,
      downRight = false,
      downLeft = false,
+     forward = false,
+     backward = false,
      stationary = true; 
 
 var rise = Math.sin(rotationAngle * (Math.PI / 180)),
@@ -78,7 +80,7 @@ var whereItsFacingPointOnTheRadiusY = 430;
     //30px = SquareRoot((1000/60)^2(1.8^2/(riseOverRun^2 + 1)^2 +(1000/60)^2(1.8^2/(runOverRise^2 + 1)^2 )
     // if rise = 0 and run = 1
     //dw = SquareRoot((1000/60)^2(1.8^2/(riseOverRun^2 + 1)^2)
-    //30 = SquareRoot((1000/60)^2(1.8^2)^2)
+    //30 = SquareRoot((1000/60)^2(1.8^2))
 
 function rightTurn(){
     if ( upRight ){
@@ -393,66 +395,24 @@ addEventListener("keydown", function (event){
     }
     
     keysPressed.add(event.key);
-    try{
+  
         keysPressed.forEach(elt => {
             if (elt === "ArrowUp"){
                 upArrow = true;
-            }else if (elt === "ArrowDown"){
+            }
+            if (elt === "ArrowDown"){
                 downArrow = true;
-            }else if (elt === "ArrowRight"){
+            }
+            if (elt === "ArrowRight"){
                 rightArrow = true;
-            }else if (elt === "ArrowLeft"){
+            }
+            if (elt === "ArrowLeft"){
                 leftArrow = true;
-            }else if (elt === ""){
+            }
+            if (elt === ""){
                 stationary = true;
             }
-
-            if(!upArrow && !downArrow && !leftArrow && !rightArrow){
-                throw("stop");
-            }else if (upArrow && rightArrow && !downArrow && !leftArrow){
-                throw("upRight");
-            }else if(upArrow && leftArrow && !downArrow && !rightArrow){
-                throw("upLeft");
-            }else if(downArrow && rightArrow & !upArrow && !leftArrow){
-                throw("downRight");
-            }else if(downArrow && leftArrow && !upArrow && !rightArrow){
-                throw("downLeft");
-            }else if(upArrow && downArrow && !leftArrow && !rightArrow){
-                throw("upDown");
-            }else if(!upArrow && !downArrow && leftArrow && rightArrow){
-                throw("leftRight");
-            }else if(upArrow && downArrow && leftArrow && rightArrow){
-                throw("upDownLeftRight");
-            }
-        })
-    } catch (e){
-        if (e === "stop"){
-            upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
-            stationary = true;
-        }else if(e === "upRight"){
-            upRight = true;
-            
-        }else if (e === "upLeft"){
-            upLeft = true
-            
-        }else if (e ==="downRight"){
-            downRight = true
-            
-        }else if (e === "downLeft"){
-            downLeft = true;
-            
-        }else if (e === "upDown"){
-            upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
-            stationary = true;
-        }else if (e === "leftRight"){
-            upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
-            stationary = true;
-        }else if (e === "upDownLeftRight"){
-            upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
-            stationary = true;
-        }
-    }
-   
+        });
     
     
 
@@ -462,12 +422,19 @@ addEventListener("keydown", function (event){
 addEventListener("keyup", function(event) {
     event.preventDefault();
     if (event.key === "ArrowLeft"){
-    upRight = upLeft = downRight = downLeft = rightArrow = leftArrow = false;
+         upLeft = downLeft = leftArrow = false;
+         
     } else if (event.key === "ArrowRight"){
-        upRight = upLeft = downRight = downLeft = rightArrow = rightArrow = false;
-    } else{
-        upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
+        upRight = downRight = rightArrow  = false;
+        
+    } else if (event.key === "ArrowUp") {
+        forward =  upArrow = false;
+       
+    }else if (event.key === "ArrowDown") {
+        backward = downArrow = false;
+        
     }
+    
     keysPressed.delete(event.key);
    
     
@@ -477,44 +444,105 @@ function checkKeys(){
     
     //wheelTurnAngle = 0;
     positionManipulationFormula();
+    try{
+        if (upArrow && rightArrow && !downArrow && !leftArrow  ){
+            throw("upRight");
+        }else if( upArrow && leftArrow && !downArrow && !rightArrow  ){
+            throw("upLeft");
+        }else if( downArrow && rightArrow && !upArrow && !leftArrow    ){
+            throw("downRight");
+        }else if( downArrow && leftArrow && !upArrow && !rightArrow   ){
+            throw("downLeft");
+        }else if ( upArrow && !rightArrow && !downArrow && !leftArrow){
+            throw("forward");
+        }else if ( downArrow && !rightArrow  && !upArrow && !leftArrow ){
+            throw("backward");
+        }else if(upArrow && downArrow && !leftArrow && !rightArrow){
+            throw("upDown");
+        }else if(!upArrow && !downArrow && leftArrow && rightArrow){
+            throw("leftRight");
+        }else if(upArrow && downArrow && leftArrow && rightArrow){
+            throw("upDownLeftRight");
+        }else if(!upArrow && !downArrow && !leftArrow && !rightArrow){
+            throw("stop");
+        }
     
+} catch (e){
+    if (e === "stop"){
+        forward = backward = upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
+        stationary = true;
+    }else if(e === "upRight"){
+        forward = false;
+        upRight = true;
+       
+    }else if (e === "upLeft"){
+        forward = false;
+        upLeft = true
+        
+    }else if (e ==="downRight"){
+        backward = false;
+        downRight = true
+        
+    }else if (e === "downLeft"){
+        backward = false;
+        downLeft = true;
+       
+    }else if (e === "forward"){
+        forward = true;
+
+    }else if (e === "backward"){
+        backward = true;
+
+    }else if (e === "upDown"){
+        upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
+        stationary = true;
+    }else if (e === "leftRight"){
+        upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
+        stationary = true;
+    }else if (e === "upDownLeftRight"){
+        upRight = upLeft = downRight = downLeft = upArrow = downArrow = rightArrow = leftArrow= false;
+        stationary = true;
+    }
+}
     if (upLeft){
         
-        arrowUp();
         leftTurn();
+        arrowUp();
+       
                
         console.log("U, L, "+positionX + "," + positionY);
         console.log("Rotation Angle: " + rotationAngle); 
     }else if (upRight){ 
-       
-        arrowUp();
-        rightTurn();
         
+        rightTurn();
+        arrowUp();
+              
         console.log("U, R, "+positionX + "," + positionY);
         console.log("Rotation Angle: " + rotationAngle); 
       
-    }else if (upArrow){ 
-        
-        arrowUp();
-        
-        console.log("U, "+positionX + "," + positionY);
-        console.log("Rotation Angle: " + rotationAngle);
     }else if (downLeft){
-        
-        arrowDown();
+       
         leftTurn();
+        arrowDown();
+        
 
         console.log("D, L, " + positionX + "," + positionY);
         console.log("Rotation Angle: " + rotationAngle);
     }else if (downRight){
         
-        arrowDown();
-        rightTurn();
-       
         
+        rightTurn();
+        arrowDown();
+               
         console.log("D, R,  " + positionX + "," + positionY);
         console.log("Rotation Angle: " + rotationAngle);
-    }else if (downArrow){
+    }else if (forward){ 
+        
+        arrowUp();
+        
+        console.log("U, "+positionX + "," + positionY);
+        console.log("Rotation Angle: " + rotationAngle);
+    }else if (backward){
         
         arrowDown();
         
